@@ -150,7 +150,7 @@ do
         {"Configure input", main_config_input},
         {"Set name", main_set_name},
         {"Options", main_options}}
-    if love.graphics.isSupported("canvas") then
+    if not major or major >= 9 or love.graphics.isSupported("canvas") then
       items[#items+1] = {"Fullscreen (LAlt+Enter)", fullscreen}
     else
       items[#items+1] = {"Your graphics card doesn't support canvases for fullscreen", main_select_mode}
@@ -2080,7 +2080,7 @@ function main_set_name()
 end
 
 function fullscreen()
-  if love.graphics.isSupported("canvas") then
+  if not major or major >= 9 or love.graphics.isSupported("canvas") then
     love.window.setFullscreen(not love.window.getFullscreen(), "desktop")
   end
   return main_select_mode

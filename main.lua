@@ -18,7 +18,11 @@ require("gen_panels")
 
 local N_FRAMES = 0
 local canvas
-if love.graphics.isSupported("canvas") then
+local major, minor, revision, codename
+if love.getVersion then
+  major, minor, revision, codename = love.getVersion( )
+end
+if not major or major >= 9 or love.graphics.isSupported("canvas") then
   canvas = love.graphics.newCanvas(default_width, default_height)
 end
 local last_x = 0
@@ -74,7 +78,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  if love.graphics.isSupported("canvas") then
+  if not major or major >= 9 or love.graphics.isSupported("canvas") then
     love.graphics.setCanvas(canvas)  
     love.graphics.setBackgroundColor(28, 28, 28)
     love.graphics.clear()
@@ -88,7 +92,7 @@ function love.draw()
   end
   love.graphics.print("FPS: "..love.timer.getFPS(),315,115)
   N_FRAMES = N_FRAMES + 1
-  if love.graphics.isSupported("canvas") then
+  if not major or major >= 9 or love.graphics.isSupported("canvas") then
     love.graphics.setCanvas()
     love.graphics.clear()
     x, y, w, h = scale_letterbox(love.graphics.getWidth(), love.graphics.getHeight(), 4, 3)
