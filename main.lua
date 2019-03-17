@@ -76,6 +76,7 @@ function love.update(dt)
   for k, v in pairs(music_t) do
     if v and k < love.timer.getTime()then
       v.t:play()
+      currently_playing_tracks[#currently_playing_tracks+1]=v.t
       if v.l then
         music_t[love.timer.getTime() + v.t:getDuration()] = make_music_t(v.t, true)
       end
