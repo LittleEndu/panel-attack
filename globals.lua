@@ -57,6 +57,9 @@ card_animation = {false,
 
 gfx_q = Queue()
 music_t = {}
+function make_music_t(source, loop, modifier, seek)
+    return {['t'] = source, ['l'] = loop or false, ['m'] = modifier or 0, ['s'] = seek or 0}
+end
 
 FC_HOVER = {12,  9,  6}
 -- TODO: delete FC_MATCH?

@@ -73,10 +73,14 @@ function love.update(dt)
   this_frame_messages = {}
 
   --Play music here
-  for key, value in pairs(music_t) do
-    if key < love.timer.getTime() and value then
-      value()
-      music_t[key] = nil
+  for k, v in pairs(music_t) do
+    if k < love.timer.getTime() and v then
+      v['t']:play()
+      v['t']:seek(v['s'])
+      if v['l'] then
+        music_t[love.timer.getTime() + v['t']:getDuration() + v['m']] = make_music_t(v['t'], true, v['m'], v['s'])
+      end
+      music_t[k] = nil
     end
   end
 end

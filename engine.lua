@@ -1242,10 +1242,9 @@ function Stack.PdP(self)
 
     local casual_music_intro  =  sounds.music.characters[winningPlayer().character].normal_music_start or zero_sound
     local casual_music_loop =   sounds.music.characters[winningPlayer().character].normal_music
-    casual_music_loop:setLooping(true)
     local critical_music_intro = sounds.music.characters[winningPlayer().character].danger_music_start or zero_sound
     local critical_music_loop =  sounds.music.characters[winningPlayer().character].danger_music
-    critical_music_loop:setLooping(true)
+
 
 
     if self.do_countdown then 
@@ -1265,8 +1264,8 @@ function Stack.PdP(self)
         casual_music_intro:stop()
         casual_music_loop:stop()
         music_t = {}
-        music_t[love.timer.getTime()] = function() critical_music_intro:play() end
-        music_t[love.timer.getTime() + critical_music_intro:getDuration()] = function() critical_music_loop:play() end
+        music_t[love.timer.getTime()] = make_music_t(critical_music_intro)
+        music_t[love.timer.getTime() + critical_music_intro:getDuration()] = make_music_t(critical_music_loop, true)
         current_music_is_casual = false
       end
     else --we should be playing normal_music or normal_music_start
@@ -1275,8 +1274,8 @@ function Stack.PdP(self)
         critical_music_intro:stop()
         critical_music_loop:stop()
         music_t = {}
-        music_t[love.timer.getTime()] = function() casual_music_intro:play() end
-        music_t[love.timer.getTime() + casual_music_intro:getDuration()] = function() casual_music_loop:play() end
+        music_t[love.timer.getTime()] = make_music_t(casual_music_intro)
+        music_t[love.timer.getTime() + casual_music_intro:getDuration()] = make_music_t(casual_music_loop, true)
         current_music_is_casual = true
       end
     end

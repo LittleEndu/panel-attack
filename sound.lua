@@ -155,12 +155,7 @@ function assert_requirements_met()
 end
 
 function stop_character_sounds(character)
-  danger_music_intro_started = nil
-  danger_music_intro_finished = nil
-  danger_music_intro_playing = nil
-  normal_music_intro_exists = nil
-  normal_music_intro_started = nil
-  normal_music_intro_finished = nil
+  music_t = {}
   for k, sound in ipairs(allowed_char_SFX) do
     if sounds.SFX.characters[character][sound] then
       sounds.SFX.characters[character][sound]:stop()
