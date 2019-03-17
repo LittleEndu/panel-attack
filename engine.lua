@@ -1245,8 +1245,6 @@ function Stack.PdP(self)
     local critical_music_intro = sounds.music.characters[winningPlayer().character].danger_music_start or zero_sound
     local critical_music_loop =  sounds.music.characters[winningPlayer().character].danger_music
 
-
-
     if self.do_countdown then 
       if SFX_Go_Play == 1 then
         sounds.SFX.go:stop()
@@ -1261,21 +1259,15 @@ function Stack.PdP(self)
     elseif (self.danger_music or (self.garbage_target and self.garbage_target.danger_music)) then --may have to rethink this bit if we do more than 2 players
       if current_music_is_casual then
         print("Music is now critical")
-        casual_music_intro:stop()
-        casual_music_loop:stop()
-        music_t = {}
-        music_t[love.timer.getTime()] = make_music_t(critical_music_intro)
-        music_t[love.timer.getTime() + critical_music_intro:getDuration()] = make_music_t(critical_music_loop, true)
+        stop_the_music()
+        find_and_add_music(winningPlayer().character, "danger_music")
         current_music_is_casual = false
       end
     else --we should be playing normal_music or normal_music_start
       if not current_music_is_casual then
         print("Music is now casual")
-        critical_music_intro:stop()
-        critical_music_loop:stop()
-        music_t = {}
-        music_t[love.timer.getTime()] = make_music_t(casual_music_intro)
-        music_t[love.timer.getTime() + casual_music_intro:getDuration()] = make_music_t(casual_music_loop, true)
+        stop_the_music()
+        find_and_add_music(winningPlayer().character, "normal_music")
         current_music_is_casual = true
       end
     end

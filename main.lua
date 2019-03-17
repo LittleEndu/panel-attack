@@ -75,10 +75,11 @@ function love.update(dt)
   --Play music here
   for k, v in pairs(music_t) do
     if k < love.timer.getTime() and v then
-      v['t']:play()
-      v['t']:seek(v['s'])
-      if v['l'] then
-        music_t[love.timer.getTime() + v['t']:getDuration() + v['m']] = make_music_t(v['t'], true, v['m'], v['s'])
+      v.t:play()
+      v.t:seek(v.s)
+      currently_playing_tracks[#currently_playing_tracks+1] = v.t
+      if v.l then
+        music_t[love.timer.getTime() + v.t:getDuration() + v.m] = make_music_t(v.t, true, v.m, v.s)
       end
       music_t[k] = nil
     end

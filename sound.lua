@@ -232,3 +232,48 @@ function sound_init()
   set_volume(sounds.SFX, config.SFX_volume/100)
   set_volume(sounds.music, config.music_volume/100) 
 end
+
+
+-- New music engine stuff here
+
+music_start_modifiers = {
+  poochy = {danger_music=-0.45, normal_music=0.35}
+}
+music_loop_modifiers = {
+  poochy = {danger_music=-0.35, normal_music=0.35-77.75}
+}
+music_seek_modifiers = {
+  poochy = {normal_music=77.75}
+}
+
+music_t = {}
+currently_playing_tracks = {} -- needed because we clone the tracks below
+function stop_the_music()
+  for k, v in pairs(currently_playing_tracks) do
+    v:stop()
+  end
+  music_t = {}
+end
+function find_and_add_music(character, musicType)
+  local loop_music = sounds.music.characters[character][musicType]
+  local start_music = sounds.music.characters[character][musicType .. "_start"] or loop_music
+  music_t[love.timer.getTime()] = make_music_t(
+          start_music
+  )
+  if music_start_modifiers[character] then
+    start_modifier = music_start_modifiers[character][musicType] or 0
+  end
+  if music_loop_modifiers[character] then
+    loop_modifier = music_loop_modifiers[character][musicType] or 0
+  end
+  if music_seek_modifiers[character] then
+    seek_modifier = music_seek_modifiers[character][musicType] or 0
+  end
+  music_t[love.timer.getTime() + start_music:getDuration() + (start_modifier or 0)] = make_music_t(
+          loop_music, true, loop_modifier, seek_modifier
+  )
+end
+
+function make_music_t(source, loop, modifier, seek)
+    return {t = source:clone(), l = loop or false, m = modifier or 0, s = seek or 0}
+end
