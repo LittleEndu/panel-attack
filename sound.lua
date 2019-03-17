@@ -257,5 +257,5 @@ function find_and_add_music(character, musicType)
 end
 
 function make_music_t(source, loop)
-    return {t = source:clone(), l = loop}
+    return {t = source:clone(), l = loop or false}
 end

@@ -2118,7 +2118,7 @@ function main_music_test()
   end
 
   -- debug scroll to music
-  while tracks[index].name ~= "poochy_danger" do index = index + 1 end
+  while tracks[index].name ~= "lip_normal" do index = index + 1 end
   -- initial song starts here
   find_and_add_music(tracks[index].char, tracks[index].type)
 

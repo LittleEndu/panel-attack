@@ -79,6 +79,7 @@ function love.update(dt)
       if v.l then
         music_t[love.timer.getTime() + v.t:getDuration()] = make_music_t(v.t, true)
       end
+      music_t[k] = nil
     end
   end
 end
