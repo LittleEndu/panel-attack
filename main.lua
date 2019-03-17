@@ -74,7 +74,6 @@ function love.update(dt)
 
   --Play music here
   for key, value in pairs(music_t) do
-    debug = debug + 1
     if key < love.timer.getTime() and value then
       value()
       music_t[key] = nil
