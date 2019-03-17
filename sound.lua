@@ -202,6 +202,7 @@ function sound_init()
       characters = {},
     }
   }
+  zero_sound = check_supported_extensions("sounds/zero_music")
   required_char_SFX = {"chain", "combo"}
   -- @CardsOfTheHeart says there are 4 chain sfx: --x2/x3, --x4, --x5 is x2/x3 with an echo effect, --x6+ is x4 with an echo effect
   allowed_char_SFX = {"chain", "combo", "combo_echo", "chain_echo", "chain2" ,"chain2_echo", "garbage_match"}

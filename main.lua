@@ -71,6 +71,15 @@ function love.update(dt)
     this_frame_unicodes = {}
   end
   this_frame_messages = {}
+
+  --Play music here
+  for key, value in pairs(music_t) do
+    debug = debug + 1
+    if key < love.timer.getTime() and value then
+      value()
+      music_t[key] = nil
+    end
+  end
 end
 
 function love.draw()

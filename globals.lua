@@ -56,6 +56,7 @@ card_animation = {false,
    11}
 
 gfx_q = Queue()
+music_t = {}
 
 FC_HOVER = {12,  9,  6}
 -- TODO: delete FC_MATCH?

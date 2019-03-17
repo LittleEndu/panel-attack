@@ -10,6 +10,7 @@ local garbage_bounce_time = #garbage_bounce_table
 local GARBAGE_DELAY = 60
 local GARBAGE_TRANSIT_TIME = 90
 local clone_pool = {}
+local current_music_is_casual = false -- must be false so that casual music start playing
 
 Stack = class(function(s, which, mode, speed, difficulty, player_number)
     s.character = uniformly(characters)
@@ -1238,7 +1239,15 @@ function Stack.PdP(self)
   end
   --Play Sounds / music
   if not music_mute and not (P1 and P1.play_to_end) and not (P2 and P2.play_to_end) then
-  
+
+    local casual_music_intro  =  sounds.music.characters[winningPlayer().character].normal_music_start or zero_sound
+    local casual_music_loop =   sounds.music.characters[winningPlayer().character].normal_music
+    casual_music_loop:setLooping(true)
+    local critical_music_intro = sounds.music.characters[winningPlayer().character].danger_music_start or zero_sound
+    local critical_music_loop =  sounds.music.characters[winningPlayer().character].danger_music
+    critical_music_loop:setLooping(true)
+
+
     if self.do_countdown then 
       if SFX_Go_Play == 1 then
         sounds.SFX.go:stop()
@@ -1249,48 +1258,26 @@ function Stack.PdP(self)
         sounds.SFX.countdown:play()
         SFX_Go_Play=0
       end
-        
+
     elseif (self.danger_music or (self.garbage_target and self.garbage_target.danger_music)) then --may have to rethink this bit if we do more than 2 players
-      if sounds.music.characters[winningPlayer().character].normal_music_start then
-        sounds.music.characters[winningPlayer().character].normal_music_start:stop()
-      end
-      sounds.music.characters[winningPlayer().character].normal_music:stop()
-      normal_music_intro_finished = nil
-      if sounds.music.characters[winningPlayer().character].danger_music_start and not danger_music_intro_finished then
-        if danger_music_intro_started and not sounds.music.characters[winningPlayer().character].danger_music_start:isPlaying() then
-          danger_music_intro_finished = true
-        else
-          sounds.music.characters[winningPlayer().character].danger_music_start:play()
-          danger_music_intro_started = true
-        end
-      end
-      if danger_music_intro_finished or not sounds.music.characters[winningPlayer().character].danger_music_start then
-        --danger music intro finished or doesn't exist
-        danger_music_intro_started = nil
-        sounds.music.characters[winningPlayer().character].danger_music:setLooping(true)
-        sounds.music.characters[winningPlayer().character].danger_music:play()
+      if current_music_is_casual then
+        print("Music is now critical")
+        casual_music_intro:stop()
+        casual_music_loop:stop()
+        music_t = {}
+        music_t[love.timer.getTime()] = function() critical_music_intro:play() end
+        music_t[love.timer.getTime() + critical_music_intro:getDuration()] = function() critical_music_loop:play() end
+        current_music_is_casual = false
       end
     else --we should be playing normal_music or normal_music_start
-      if sounds.music.characters[winningPlayer().character].danger_music_start then
-        sounds.music.characters[winningPlayer().character].danger_music_start:stop()
-      end
-      sounds.music.characters[winningPlayer().character].danger_music:stop()
-      danger_music_intro_started = nil
-      danger_music_intro_finished = nil
-      danger_music_intro_playing = nil
-      if not normal_music_intro_started and not normal_music_intro_finished then
-        if sounds.music.characters[winningPlayer().character].normal_music_start then
-          sounds.music.characters[winningPlayer().character].normal_music_start:play()
-          normal_music_intro_exists = true
-          normal_music_intro_started = true
-        end
-      end
-      if normal_music_intro_finished or not sounds.music.characters[winningPlayer().character].normal_music_start or (normal_music_intro_started and not sounds.music.characters[winningPlayer().character].normal_music_start:isPlaying()) then
-        normal_music_intro_started = nil
-        normal_music_intro_finished = true
-        
-        sounds.music.characters[winningPlayer().character].normal_music:setLooping(true)
-        sounds.music.characters[winningPlayer().character].normal_music:play()
+      if not current_music_is_casual then
+        print("Music is now casual")
+        critical_music_intro:stop()
+        critical_music_loop:stop()
+        music_t = {}
+        music_t[love.timer.getTime()] = function() casual_music_intro:play() end
+        music_t[love.timer.getTime() + casual_music_intro:getDuration()] = function() casual_music_loop:play() end
+        current_music_is_casual = true
       end
     end
   end
